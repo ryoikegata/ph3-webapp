@@ -6,6 +6,7 @@ import Modal from '@/Components/Modal';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import { useForm } from '@inertiajs/react';
+import React from 'react';
 
 export default function DeleteUserForm({ className = '' }: { className?: string }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);

@@ -24,6 +24,9 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+Route::get('/index', function () {
+    return Inertia::render('Index'); // Indexコンポーネントを表示
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
