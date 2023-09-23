@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudyController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,9 +25,7 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-Route::get('/index', function () {
-    return Inertia::render('Index'); // Indexコンポーネントを表示
-});
+Route::resource('/index', StudyController::class);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
