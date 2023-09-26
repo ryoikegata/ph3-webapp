@@ -12,7 +12,7 @@ export default defineConfig({
     ],
     server: {
         host: true,
-        hmr: { 
+        hmr: {
             host: 'localhost'
         },
     }
