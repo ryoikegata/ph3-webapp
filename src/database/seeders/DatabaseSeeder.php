@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\StudiesTableSeeder;
 use Database\Seeders\ContentsTableSeeder;
 use Database\Seeders\LanguagesTableSeeder;
+use Database\Seeders\UsersTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StudiesTableSeeder::class);
         $this->call(ContentsTableSeeder::class);
         $this->call(LanguagesTableSeeder::class);
+        $this->call(UsersTableSeeder::class);
     }
 }
