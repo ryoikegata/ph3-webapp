@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 
 class Study extends Model
 {
@@ -14,17 +15,19 @@ class Study extends Model
         'user_id',
         'content_id',
         'language_id',
-        'hours'
+        'hours',
+        'create_at'
     ];
 
 
-    public function user () {
-        return $this->belongsTo(User::class);
+    public function users () {
+        return $this->belongsTo(User::class, 'user_id');
     }
-    public function content () {
-        return $this->belongsTo(Content::class);
+    public function contents () {
+        return $this->belongsTo(Content::class, 'content_id');
     }
-    public function language () {
-        return $this->belongsTo(Language::class);
+    public function languages () {
+        return $this->belongsTo(Language::class, 'language_id');
     }
+
 }

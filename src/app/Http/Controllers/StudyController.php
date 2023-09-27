@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Study;
+use App\Models\Content;
+use App\Models\Language;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -14,8 +18,14 @@ class StudyController extends Controller
      */
     public function index()
     {
-        $studies = Study::all();
-        return Inertia::render('Index', ['studies' => $studies]);
+
+        $userId = Auth::id();
+        $user = User::find($userId);
+        $today = now();
+        $month = $today->month();
+        $studies = Study::with('contents', 'languages')->where('user_id', $userId)->get();
+
+        return Inertia::render('Index', ['studies' => $studies, 'user' => $user]);
     }
 
     /**

@@ -14,7 +14,7 @@ class Content extends Model
     ];
 
 
-    public function studies()
+     public function studies()
     {
         return $this->hasMany(Study::class);
     }
