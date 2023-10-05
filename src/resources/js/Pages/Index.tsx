@@ -1,85 +1,94 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '@/Components/Header';
 import BarChart from '@/Components/BarChart';
 import  Hours  from "@/Components/Hours";
 import Footer from '@/Components/Footer';
 import ContentChart from '@/Components/ContentChart';
 import LanguageChart from '@/Components/LanguageChart';
+import FromModal from '@/Components/FromModal';
 import Dropdown from '@/Components/Dropdown';
 import { usePage } from '@inertiajs/react';
 
-export default function Index ({ studies, user }) {
+export default function Index ({ studies }) {
+
+  const [ToggleModal, setToggleModal] = useState(false);
 
 
+  //modalを表示・非表示の処理
+  const toggleModal =  () => {
+    setToggleModal(!ToggleModal);
+    const body = document.querySelector('.body');
+    body.classList.toggle('hidden');
+  };
+
+
+
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+  const [showDate, setShowDate] = useState(currentYear + '/' + currentMonth);
+  const [showMonth, setShowMonth] = useState(currentMonth);
+  const [showYear, setShowYear] = useState(currentYear);
+
+  const monthClick = (action) => {
+    if(action === 'next') {
+      setShowMonth(showMonth + 1);
+      if(showMonth === 11) {
+        setShowYear(showYear + 1);
+        setShowMonth(0);
+      }
+    } else if(action === 'previous') {
+      setShowMonth(showMonth - 1);
+      if (showMonth === 0) {
+        setShowYear(showYear - 1);
+        setShowMonth(11);
+      }
+    }
+  }
+  useEffect (() => {
+    setShowDate(showYear + '/' + showMonth);
+  },[showYear, showMonth]);
+  console.log(showDate);
+  //月々のdataを取得
   const Studies = studies;
-  console.log(Studies);
+  //Hoursコンポーネントに対してそれぞれの学習時間を渡す
   let MonthHours = 0;
   let DateHours = 0;
   let AllHours = 0;
+  let MonthData = [];
   Studies.forEach(study => {
-    const today = new Date();
     const createdAt = new Date(study['created_at']);
-    if (today.getMonth() === createdAt.getMonth()) {
+    if (showYear === createdAt.getFullYear() && showMonth === createdAt.getMonth()) {
       MonthHours += study['hours'];
-      if(today.getDate() === createdAt.getDate()) {
+      MonthData.push(study);
+      if(currentDate.getDate() === createdAt.getDate()) {
         DateHours += study['hours'];
       }
     }
     AllHours += study['hours'];
+
+
+
   });
-
-
-
-  const User = user;
   return (
-    <div>
-                                   <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="ml-2 -mr-0.5 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
+    <>
+    <div className='w-screen h-screen absolute top-0 body opacity-70 bg-gray-600 hidden'> </div>
       <div className='bg-gray-200 w-screen h-screen'>
-      <Header></Header>
-      <div className='md:flex justify-around w-full'>
-        <div>
+      <Header Modal={toggleModal}></Header>
+      <div className='md:flex justify-around w-full md:h-5/6'>
+      <div className='md:w-1/2 lg:w-1/2'>
       <Hours AllHours={AllHours} MonthHours={MonthHours} DateHours={DateHours}></Hours>
-      <BarChart />
+      <BarChart MonthData={MonthData}/>
       </div>
-      <div className='flex justify-around'>
-    <ContentChart></ContentChart>
-      <LanguageChart></LanguageChart>
+      <div className='flex justify-around md:w-1/2'>
+    <ContentChart MonthData={MonthData}></ContentChart>
+    <LanguageChart MonthData={MonthData}></LanguageChart>
     </div>
     </div>
-    <Footer></Footer>
+    <Footer MonthClick={monthClick} year={showYear} month={showMonth}></Footer>
+    {ToggleModal && <FromModal Modal={toggleModal}></FromModal>}
       </div>
-    </div>
+    </>
   );
 }
 
