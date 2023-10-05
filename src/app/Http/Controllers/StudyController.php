@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
+//mail
+use Illuminate\Support\Facades\Mail;
+use App\Mail\login;
+
 class StudyController extends Controller
 {
     /**
@@ -25,6 +29,7 @@ class StudyController extends Controller
         $month = $today->month();
         $studies = Study::with('contents', 'languages')->where('user_id', $userId)->get();
 
+        Mail::to('recipient@example.com')->send(new login($studies, $user));
         return Inertia::render('Index', ['studies' => $studies, 'user' => $user]);
     }
 
