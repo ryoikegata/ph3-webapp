@@ -8,8 +8,12 @@ import LanguageChart from '@/Components/LanguageChart';
 import FromModal from '@/Components/FromModal';
 import Dropdown from '@/Components/Dropdown';
 import { usePage } from '@inertiajs/react';
+import { Study } from '@/types/index';
+import { all } from 'axios';
+import { getAllHours  as getTotalHours }  from '@/services/getAllHours';
+import { getMonthHours as getMonthHours } from '@/services/getMonthHours';
 
-export default function Index ({ studies }) {
+export default function Index ({ studies } :{studies: Study[]}) {
 
   const [ToggleModal, setToggleModal] = useState(false);
 
@@ -17,7 +21,7 @@ export default function Index ({ studies }) {
   //modalを表示・非表示の処理
   const toggleModal =  () => {
     setToggleModal(!ToggleModal);
-    const body = document.querySelector('.body');
+    const body :any = document.querySelector('.body');
     body.classList.toggle('hidden');
   };
 
@@ -29,8 +33,12 @@ export default function Index ({ studies }) {
   const [showDate, setShowDate] = useState(currentYear + '/' + currentMonth);
   const [showMonth, setShowMonth] = useState(currentMonth);
   const [showYear, setShowYear] = useState(currentYear);
+  const [dateHours, setDateHours] = useState<number>(0);
+  const [MonthData, setMonthData] = useState([]);
+  const totalHours = getTotalHours({ studies });
+  const monthHours = getMonthHours({ studies, showYear, showMonth });
 
-  const monthClick = (action) => {
+  const monthClick = (action :string) => {
     if(action === 'next') {
       setShowMonth(showMonth + 1);
       if(showMonth === 11) {
@@ -47,29 +55,9 @@ export default function Index ({ studies }) {
   }
   useEffect (() => {
     setShowDate(showYear + '/' + showMonth);
-  },[showYear, showMonth]);
-  console.log(showDate);
-  //月々のdataを取得
-  const Studies = studies;
-  //Hoursコンポーネントに対してそれぞれの学習時間を渡す
-  let MonthHours = 0;
-  let DateHours = 0;
-  let AllHours = 0;
-  let MonthData = [];
-  Studies.forEach(study => {
-    const createdAt = new Date(study['created_at']);
-    if (showYear === createdAt.getFullYear() && showMonth === createdAt.getMonth()) {
-      MonthHours += study['hours'];
-      MonthData.push(study);
-      if(currentDate.getDate() === createdAt.getDate()) {
-        DateHours += study['hours'];
-      }
-    }
-    AllHours += study['hours'];
+  },[showMonth, showYear]);
 
 
-
-  });
   return (
     <>
     <div className='w-screen h-screen absolute top-0 body opacity-70 bg-gray-600 hidden'> </div>
@@ -77,7 +65,7 @@ export default function Index ({ studies }) {
       <Header Modal={toggleModal}></Header>
       <div className='md:flex justify-around w-full md:h-5/6'>
       <div className='md:w-1/2 lg:w-1/2'>
-      <Hours AllHours={AllHours} MonthHours={MonthHours} DateHours={DateHours}></Hours>
+      <Hours AllHours={totalHours} MonthHours={monthHours} DateHours={dateHours}></Hours>
       <BarChart MonthData={MonthData}/>
       </div>
       <div className='flex justify-around md:w-1/2'>

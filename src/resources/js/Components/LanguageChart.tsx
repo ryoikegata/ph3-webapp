@@ -28,7 +28,6 @@ function LanguageChart({MonthData}) {
 
   },[MonthData]);
 
-  console.log(languageData);
 
   const data = {
     labels: languageData ? Object.keys(languageData) : [],

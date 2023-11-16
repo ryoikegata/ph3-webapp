@@ -15,7 +15,10 @@
                 "./resources/js/*"
             ]
         },
-        "baseUrl": "."
+        "baseUrl": ".",
+        "typeRoots": [
+            "./node_modules/@types",
+            "./resources/js/types"]
     },
     "include": [
         "resources/js/**/*.ts",
