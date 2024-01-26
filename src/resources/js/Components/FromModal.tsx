@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, } from '@fortawesome/free-regular-svg-icons';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import useSWR from "swr";
+import { usePage } from "@inertiajs/inertia-react";
 
 
-export default function FromModal ({Modal}) {
-
+const FromModal = ({Modal}) => {
+  const { contents } = usePage().props;
+  console.log(contents);
   return (
     <div className=" flex justify-center sm:items-center">
     <div className="absolute w-full h-5/6 bg-white sm:bottom-10 bottom-0 rounded-t-3xl sm:w-5/6 sm:rounded-3xl ">
@@ -20,13 +23,15 @@ export default function FromModal ({Modal}) {
       <div>
         <p>学習コンテンツ</p>
         <div className="">
-        <label htmlFor="" className="">
+          {contents?.map((content :any) => (
+        <label htmlFor="" className="" key={content.id}>
           <input type="checkbox" className="hidden" />
           <span className="bg-gray-100 p-1 rounded-3xl">
           <FontAwesomeIcon icon={faCircleCheck} className="text-gray-300 w-6 h-6" />
-          <span className="text-sm">ドットインストール</span>
+          <span className="text-sm">{content.content}</span>
           </span>
         </label>
+          ))}
         </div>
       </div>
       <div>
@@ -38,3 +43,4 @@ export default function FromModal ({Modal}) {
     </div>
   );
 };
+export default FromModal;

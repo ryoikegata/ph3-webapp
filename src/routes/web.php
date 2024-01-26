@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContentsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudyController;
 use Illuminate\Foundation\Application;
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
 Route::resource('/study', StudyController::class);
 })->middleware(['auth', 'verified']);
 
+Route::resource('/content', ContentsController::class);
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified']);
